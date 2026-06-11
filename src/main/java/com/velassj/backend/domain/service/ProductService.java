@@ -7,7 +7,8 @@ import com.velassj.backend.domain.repositories.CategoryRepository;
 import com.velassj.backend.domain.repositories.ProductRepository;
 import com.velassj.backend.domain.entity.Category;
 import com.velassj.backend.domain.entity.Product;
-import com.velassj.backend.api.ProductDTO;
+import com.velassj.backend.api.ProductRequestDTO;
+import com.velassj.backend.api.ProductResponseDTO;
 
 import java.util.List;
 
@@ -48,7 +49,6 @@ public class ProductService {
                 product.getDescription(),
                 product.getPrice(),
                 product.getStockQuantity(),
-                product.getCategory().getName()
-        );
+                product.getCategory().getName());
     }
 }

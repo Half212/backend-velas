@@ -15,7 +15,6 @@ CREATE TABLE product (
 
 -- Inserção de dados iniciais para teste dos juniores
 INSERT INTO category (name) VALUES ('Classicas'), ('Aromaticas'), ('Decoração');
-o
 INSERT INTO product (name, description, price, stock_quantity, category_id) 
 VALUES ('Vela 7 dias Branca', 'Vela 7 duas', 10.00, 50, 1),
        ('Vela Lavanda', 'Perfumada de Lavanda', 20.00, 50, 2),
