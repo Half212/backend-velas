@@ -21,9 +21,25 @@ public class ProductController {
         return productService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ProductResponseDTO getProductById(@PathVariable Long id) {
+        return productService.findById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponseDTO createProduct(@RequestBody @Valid ProductRequestDTO request) {
         return productService.create(request);
+    }
+
+    @PutMapping("/{id}")
+    public ProductResponseDTO updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequestDTO request) {
+        return productService.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
     }
 }

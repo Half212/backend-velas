@@ -11,7 +11,8 @@ import java.math.BigDecimal;
         String description,
         @NotNull @Min(0) BigDecimal price,
         @NotNull @Min(0) Integer stockQuantity,
-        @NotNull Long categoryId
+        @NotNull Long categoryId,
+        String image
 ) {}
 
 
