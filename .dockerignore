@@ -4,6 +4,4 @@ target/
 .vscode/
 .gemini/
 *.log
-docker-compose.yml
-Dockerfile
-README.md
+
