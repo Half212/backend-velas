@@ -23,9 +23,6 @@ spring:
 
   # Migrações com Flyway
   flyway:
-    url: ${DB_URL}
-    user: ${DB_USER}
-    password: ${DB_PASSWORD}
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration
