@@ -62,6 +62,7 @@ public class SecurityConfig {
             .cors(withDefaults())
             .csrf(AbstractHttpConfigurer::disable) // Desabilitado para APIs REST simples
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Comum pode ver
                 .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll() // Cadastro de produtos pelo portal
                 .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll() // Alteração de produtos pelo portal
