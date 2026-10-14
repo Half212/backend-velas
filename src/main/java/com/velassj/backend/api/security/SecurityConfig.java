@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.web.cors.CorsConfiguration;
@@ -46,7 +45,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
             
             return new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
@@ -60,20 +59,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(AbstractHttpConfigurer::disable) // Desabilitado para APIs REST simples
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Comum pode ver
-                .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll() // Cadastro de produtos pelo portal
-                .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll() // Alteração de produtos pelo portal
-                .requestMatchers(HttpMethod.DELETE, "/api/products/**").permitAll() // Exclusão de produtos pelo portal
-                .requestMatchers("/api/categories/**").permitAll() // Consulta e criação de categorias
-                .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // Cadastro
-                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll() // Login
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
+                .requestMatchers("/api/categories/**").permitAll()
+                .requestMatchers("/api/orders/**").permitAll()
+                .requestMatchers("/api/carousel/**").permitAll()
+                .requestMatchers("/api/collections/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .requestMatchers("/api/users/**").hasAnyAuthority("ROLE_SUPERVISOR", "ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
-            .httpBasic(withDefaults()); // Utilizando Basic Auth para simplificar a autenticação no momento
+            .httpBasic(withDefaults());
 
         return http.build();
     }
@@ -83,7 +85,6 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         List<String> allowedPatterns = new ArrayList<>();
         
-        // Padrões padrão para desenvolvimento local e deploys (Vercel e Render)
         allowedPatterns.add("http://localhost:*");
         allowedPatterns.add("http://127.0.0.1:*");
         allowedPatterns.add("https://*.vercel.app");
@@ -91,7 +92,6 @@ public class SecurityConfig {
         allowedPatterns.add("https://frontend-veleas.vercel.app");
         allowedPatterns.add("https://frontend-velas.vercel.app");
 
-        // Suporta FRONTEND_URL individual ou lista separada por vírgulas
         if (frontendUrl != null && !frontendUrl.isBlank()) {
             String[] origins = frontendUrl.split(",");
             for (String origin : origins) {

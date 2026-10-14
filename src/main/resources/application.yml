@@ -2,11 +2,11 @@ spring:
   application:
     name: backend
 
-  # Conexão com o Banco de Dados (Neon / Local)
+  # Conexao com o Banco de Dados (Neon / Local)
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://ep-empty-band-b6xh2cfu-pooler.c-2.sa-east-1.aws.neon.tech/ecommerce_db?sslmode=require&channelBinding=require}
+    username: ${DB_USER:neondb_owner}
+    password: ${DB_PASSWORD:npg_w9HG5qYxKRnI}
     driver-class-name: org.postgresql.Driver
 
   # Comportamento do JPA / Hibernate
@@ -14,14 +14,13 @@ spring:
     show-sql: true
     open-in-view: false
     hibernate:
-      # Em homologação podemos usar 'update'. Em produção, 'validate'.
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
-  # Migrações com Flyway
+  # Migracoes com Flyway
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -30,7 +29,6 @@ spring:
 server:
   port: ${PORT:8080}
 
-# Variável customizada para uso no CORS
 app:
   cors:
     frontend-url: ${FRONTEND_URL:http://localhost:3000}
