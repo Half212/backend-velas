@@ -1,4 +1,4 @@
-package com.velassj.backend.api;
+package com.velassj.backend.api.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

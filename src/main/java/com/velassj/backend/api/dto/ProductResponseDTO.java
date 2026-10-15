@@ -1,4 +1,4 @@
-package com.velassj.backend.api;
+package com.velassj.backend.api.dto;
 import java.math.BigDecimal;
 
 public record ProductResponseDTO(
