@@ -83,32 +83,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-<<<<<<< HEAD
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000","https://www.velassaojoao.com.br/"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-=======
-        List<String> allowedPatterns = new ArrayList<>();
-        
-        allowedPatterns.add("http://localhost:*");
-        allowedPatterns.add("http://127.0.0.1:*");
-        allowedPatterns.add("https://*.vercel.app");
-        allowedPatterns.add("https://*.onrender.com");
-        allowedPatterns.add("https://frontend-veleas.vercel.app");
-        allowedPatterns.add("https://frontend-velas.vercel.app");
-
-        if (frontendUrl != null && !frontendUrl.isBlank()) {
-            String[] origins = frontendUrl.split(",");
-            for (String origin : origins) {
-                String trimmed = origin.trim();
-                if (!trimmed.isEmpty() && !allowedPatterns.contains(trimmed)) {
-                    allowedPatterns.add(trimmed);
-                }
-            }
-        }
-
-        configuration.setAllowedOriginPatterns(allowedPatterns);
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
->>>>>>> 67a58d1f69dd11c43f241e61b5531529d362b975
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "X-Total-Count"));
         configuration.setAllowCredentials(true);
