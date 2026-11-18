@@ -13,6 +13,28 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ecommerce_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_velas
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres-db:5432/ecommerce_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      postgres-db:
+        condition: service_healthy
 
 volumes:
   postgres_data:

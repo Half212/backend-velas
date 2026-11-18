@@ -1,6 +1,6 @@
 package com.velassj.backend.api.controller;
-import com.velassj.backend.api.ProductRequestDTO;
-import com.velassj.backend.api.ProductResponseDTO;
+import com.velassj.backend.api.dto.ProductRequestDTO;
+import com.velassj.backend.api.dto.ProductResponseDTO;
 import com.velassj.backend.domain.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -3,6 +3,7 @@ package com.velassj.backend.api.security;
 import com.velassj.backend.domain.entity.User;
 import com.velassj.backend.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.web.cors.CorsConfiguration;
@@ -31,6 +33,9 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
+    @Value("${app.cors.frontend-url:http://localhost:3000}")
+    private String frontendUrl;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,7 +45,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         return username -> {
             User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+                    .orElseThrow(() -> new UsernameNotFoundException("Usuario nao encontrado"));
             
             return new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
@@ -54,19 +59,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .cors(withDefaults())
-            .csrf(AbstractHttpConfigurer::disable) // Desabilitado para APIs REST simples
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll() // Comum pode ver
-                .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll() // Cadastro de produtos pelo portal
-                .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll() // Alteração de produtos pelo portal
-                .requestMatchers(HttpMethod.DELETE, "/api/products/**").permitAll() // Exclusão de produtos pelo portal
-                .requestMatchers("/api/categories/**").permitAll() // Consulta e criação de categorias
-                .requestMatchers(HttpMethod.POST, "/api/users").permitAll() // Cadastro
-                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll() // Login
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").permitAll()
+                .requestMatchers("/api/categories/**").permitAll()
+                .requestMatchers("/api/orders/**").permitAll()
+                .requestMatchers("/api/carousel/**").permitAll()
+                .requestMatchers("/api/collections/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/login").permitAll()
                 .requestMatchers("/api/users/**").hasAnyAuthority("ROLE_SUPERVISOR", "ROLE_ADMIN")
                 .anyRequest().authenticated()
             )
-            .httpBasic(withDefaults()); // Utilizando Basic Auth para simplificar a autenticação no momento
+            .httpBasic(withDefaults());
 
         return http.build();
     }
@@ -74,10 +83,37 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000"));
+<<<<<<< HEAD
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000","https://www.velassaojoao.com.br/"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+=======
+        List<String> allowedPatterns = new ArrayList<>();
+        
+        allowedPatterns.add("http://localhost:*");
+        allowedPatterns.add("http://127.0.0.1:*");
+        allowedPatterns.add("https://*.vercel.app");
+        allowedPatterns.add("https://*.onrender.com");
+        allowedPatterns.add("https://frontend-veleas.vercel.app");
+        allowedPatterns.add("https://frontend-velas.vercel.app");
+
+        if (frontendUrl != null && !frontendUrl.isBlank()) {
+            String[] origins = frontendUrl.split(",");
+            for (String origin : origins) {
+                String trimmed = origin.trim();
+                if (!trimmed.isEmpty() && !allowedPatterns.contains(trimmed)) {
+                    allowedPatterns.add(trimmed);
+                }
+            }
+        }
+
+        configuration.setAllowedOriginPatterns(allowedPatterns);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
+>>>>>>> 67a58d1f69dd11c43f241e61b5531529d362b975
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Authorization", "Content-Type", "X-Total-Count"));
         configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
